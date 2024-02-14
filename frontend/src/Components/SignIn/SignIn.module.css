@@ -1,0 +1,26 @@
+.inpt{
+    
+    box-shadow:  5px 5px  5px #dbd2d2;;
+    border-radius: 4px;
+    height: 2.5rem;
+    padding-left: 5px;
+}
+.brdr{
+    border-radius: 8px;
+    box-shadow:  5px 5px 5px 5px #dbd2d2;;
+    padding: 1rem;
+}
+.main{
+    display: flex;
+    justify-content: center;
+}
+@media only screen and (max-width: 800px) {
+    .img{
+        display: none;
+        width: 0px;
+    }
+    .main{
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+}

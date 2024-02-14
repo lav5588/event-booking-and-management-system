@@ -1,0 +1,6 @@
+.container input {
+    border-radius: 10px;
+    height: 3rem;
+    padding: 5px;
+    width: 100%;
+}

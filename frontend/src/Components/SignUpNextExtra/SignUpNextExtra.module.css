@@ -1,0 +1,9 @@
+.container{
+    box-shadow: 5px 5px 10px rgb(138, 136, 136);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+.backArrow{
+    box-shadow: 2px 2px 5px rgb(150, 149, 149);
+
+}

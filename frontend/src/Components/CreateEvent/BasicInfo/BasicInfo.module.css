@@ -1,0 +1,21 @@
+.container input , .container select{
+    border-radius: 10px;
+    height: 3rem;
+    padding: 5px;
+    width: 100%;
+}
+.startTimePicker:before {
+    content: 'Start Time:';
+    margin-right: .6em;
+    color: #9d9d9d;
+ }
+ .endTimePicker:before {
+    content: 'End Time:';
+    margin-right: .6em;
+    color: #9d9d9d;
+ }
+ .datePicker:before{
+    content: "Event Date:";
+    margin-right: .6em;
+    color: #9d9d9d;
+ }
