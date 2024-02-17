@@ -46,6 +46,7 @@ const SignIn = () => {
 
       setLoading("");
       navigate("/");
+      location.reload();
     } catch (error) {
         setLoading("");
         setError("Error: "+error);

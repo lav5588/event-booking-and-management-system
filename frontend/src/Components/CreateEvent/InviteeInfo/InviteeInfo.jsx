@@ -27,7 +27,7 @@ const InviteeInfo = () => {
     files
   }=useSelector(state=>state.createEventDataStateReducer) || "";
   const [error,setError]=useState("");
-
+  const [loading,setLoading]=useState(false);
   const dispatch =useDispatch();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,37 +44,48 @@ const InviteeInfo = () => {
     e.target.value="";
   }
   const handlePublish=async()=>{
-
-    const formData=new FormData;
-    files.forEach((item)=>{
-      formData.append("files",item);
-    })
-
-   formData.append("inviteeViaMail",inviteeViaMail);
-   formData.append("inviteeViaNumber",inviteeViaNumber);
-   formData.append("eventName",eventName);
-   formData.append("isOpen",isOpen);
-   formData.append("isFree",isFree);
-   formData.append("price",price);
-   formData.append("date",date);
-   formData.append("location",location);
-   formData.append("startTime",startTime);
-   formData.append("endTime",endTime);
-   formData.append("category",category);
-   formData.append("format",format);
-   formData.append("description",description);
-   formData.append("hashTags",hashTags);
-
-    
-    const resp=await axios.post(`${import.meta.env.VITE_BASE_URI}/events/register`,formData,{
-      withCredentials:true,
-      headers:{
-        "Content-Type":"multipart/form-data"
-      }
-    });
-    navigate("/");
-    console.log(resp);
+    try {
+      setLoading(true);
+      const formData=new FormData;
+      files.forEach((item)=>{
+        formData.append("files",item);
+      })
+  
+     formData.append("inviteeViaMail",inviteeViaMail);
+     formData.append("inviteeViaNumber",inviteeViaNumber);
+     formData.append("eventName",eventName);
+     formData.append("isOpen",isOpen);
+     formData.append("isFree",isFree);
+     formData.append("price",price);
+     formData.append("date",date);
+     formData.append("location",location);
+     formData.append("startTime",startTime);
+     formData.append("endTime",endTime);
+     formData.append("category",category);
+     formData.append("format",format);
+     formData.append("description",description);
+     formData.append("hashTags",hashTags);
+  
+      
+      const resp=await axios.post(`${import.meta.env.VITE_BASE_URI}/events/register`,formData,{
+        withCredentials:true,
+        headers:{
+          "Content-Type":"multipart/form-data"
+        }
+      });
+      setLoading(false);
+      navigate("/");
+      setTimeout(()=>{
+        location.reload();
+      },100);
+      console.log(resp);
+    } catch (error) {
+        setError("Error: "+error);
+        setLoading(false);
+    }
   };
+
+  
 
   return (
     <div className="min-h-[85vh] flex items-center">
@@ -102,7 +113,10 @@ const InviteeInfo = () => {
               <RxCross1 className="text-xl cursor-pointer" onClick={()=>dispatch(removeInviteeViaNumber(mobileNumber))}/>
             </div>)}
         </div>
+      {loading?
+      <div className="self-end px-10 py-2 bg-[#B1761F] text-white cursor-wait rounded-lg text-2xl">Publishing Your Event........</div>:
       <div className="self-end px-10 py-2 bg-[#B1761F] text-white rounded-lg text-2xl" onClick={handlePublish}><button >Publish</button></div>
+      }
       </div>
     </div>
     </div>

@@ -18,6 +18,7 @@ const UserProfile = () => {
       console.log("logged out")
       console.log("logged out:",logOutData.data);
       navigate("/");
+      location.reload();
   }
 
   return (

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaHeart } from "react-icons/fa";
 import axios from 'axios';
+import { setLike } from '../Store/Slices/EventDataSlice';
 
 export const formattedDate=(evDate)=>{
   const originalDate = new Date(evDate);
@@ -39,20 +40,26 @@ const Events = () => {
   
 
   const eventData = useSelector(state=>state.eventDataReducer.eventData);
-  console.log(eventData);
+  const status = useSelector(state=>state.authReducer.status);
   const onClickHandler =(eventId)=>{
-      // dispatch(setSelectedEvent(data));
       navigate(`/event/${eventId}`);
   }
 
   const handleFavorites=async(eventId)=>{
       try {
+          if(!status){
+            if(confirm('Please Login First to like the event.\nDo you want to Login?')){
+                navigate('/signin');
+                return;
+            }
+          }
           const response=await axios.post(`${import.meta.env.VITE_BASE_URI}/favorites/handlefavorite`,{eventId},{withCredentials:true})
           if(!response){
               console.log("Something went wrong while adding favorites");
               return;
           }
-          console.log(response);
+          console.log(response.data);
+          dispatch(setLike(eventId));
           
       } catch (error) {
         console.log(error);
@@ -68,7 +75,7 @@ const Events = () => {
           return (
             <div key={data._id} className='p-2.5 m-2.5 w-96  shadow-md bg-white  rounded-lg hover:shadow-gray-900 hover:scale-105 hover:shadow-2xl'  >
               <img src={data.files[0]} className='h-60 w-96 rounded-lg' alt="" />
-              <button className='text-3xl relative bg-white rounded-[50%] p-3 top-[-15rem] left-[20rem] text-[#969090] hover:text-[red]' onClick={()=>handleFavorites(data._id)}><FaHeart className=''/></button>
+              <button className={`text-3xl relative bg-white rounded-[50%] p-3 top-[-15rem] left-[20rem] ${data.isLike?"text-[red]":"text-[#969090]"} hover:text-[red]`} onClick={()=>handleFavorites(data._id)}><FaHeart className=''/></button>
              <div onClick={()=>{onClickHandler(data._id)}} className='cursor-pointer'>
                 <h1 className='font-semibold text-3xl text-center'>{data.eventName}</h1>
                   <p>{formattedDate(data.eventDate)+data.startTime}</p>

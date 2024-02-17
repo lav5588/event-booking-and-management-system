@@ -1,9 +1,11 @@
+
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
 import Event from "../models/event.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import jwt from "jsonwebtoken"
 
 const registerEvent=asyncHandler(async(req,res)=>{
     let {
@@ -113,6 +115,57 @@ const registerEvent=asyncHandler(async(req,res)=>{
 
 
 const getEvent=asyncHandler(async(req,res)=>{
+
+  const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
+    if(token){
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
+    if(user){
+      const events=await Event.aggregate([
+        {
+          $lookup: {
+            from: "favoriteevents",
+            let: { eventId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$event", "$$eventId"] },
+                      { $eq: ["$user", user._id] }
+                    ]
+                  }
+                }
+              },
+              { $count: "isLike" }
+            ],
+            as: "favoriteEventDetails"
+          }
+        },
+        {
+          $addFields: {
+            isLike: {
+              $cond: {
+                if: { $gt: [{ $size: "$favoriteEventDetails" }, 0] },
+                then: true,
+                else: false
+              }
+            }
+          }
+        },
+        {
+          $unset: "favoriteEventDetails"
+        },
+        {
+          $sort: { "createdAt": -1 }
+        }
+      ])
+      return res
+      .status(200)
+      .json(new ApiResponse(200,events,"Event fetched successfully"))
+    }
+  }
+
     const events=await Event.aggregate([
         {
           $lookup: {

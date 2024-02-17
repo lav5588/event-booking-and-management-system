@@ -18,7 +18,7 @@ const App=()=> {
     
     if(!eventData){
       (async()=>{
-        const event=await axios.get(`${import.meta.env.VITE_BASE_URI}/events/get-events`);
+        const event=await axios.get(`${import.meta.env.VITE_BASE_URI}/events/get-events`,{withCredentials:true});
         dispatch(setEventData(event.data.data))
         console.log("Event: ",event?.data);
       })();

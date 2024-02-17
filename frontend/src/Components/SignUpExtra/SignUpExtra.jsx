@@ -36,7 +36,7 @@ const SignUpExtra = () => {
     await axios.post("http://localhost:8000/api/v1/users/login", {
       email,
       password,
-    });    
+    },{withCredentials: true});    
     
     dispatch(setSignUpExtra(false));
     dispatch(setSignUpNextExtra(true));

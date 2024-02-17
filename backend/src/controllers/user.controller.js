@@ -227,7 +227,10 @@ const getcurrentUser=asyncHandler(async(req,res)=>{
           
         ]
     )
-    const user={...req.user._doc,"bookedEvents":bookedEvents[0].bookedEvents}
+    
+    const user={...req.user._doc,"bookedEvents":bookedEvents[0]?.bookedEvents || null}
+  
+
     return res
     .status(200)
     .json(

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // selectedEvent:null,
   eventData: null,
 };
 
@@ -12,12 +11,18 @@ export const eventDataSlice=createSlice({
       setEventData: (state, action) => {
         state.eventData = action.payload;
       },
-      // setSelectedEvent: (state, action) => {
-      //   state.selectedEvent = action.payload;
-      // },
+      setLike:(state, action) => {
+        const data=JSON.parse(JSON.stringify(state.eventData)).map((item) => {
+              if (item._id===action.payload){
+                return {...item,isLike:!item.isLike}
+              }
+              return item;
+        });
+        state.eventData=data;
+      },
     }
 });
 
-export const { setEventData,setSelectedEvent }=eventDataSlice.actions;
+export const { setEventData,setLike }=eventDataSlice.actions;
 
 export default eventDataSlice.reducer;
