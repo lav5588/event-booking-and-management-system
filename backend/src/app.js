@@ -16,6 +16,7 @@ import eventRouter from './routes/event.routes.js'
 import blogsRouter from './routes/blogs.routes.js'
 import bookingRouter from './routes/booking.routes.js'
 import favoritesRouter from "./routes/favoriteEvents.routes.js"
+import contactUsRouter from "./routes/contactUs.routes.js"
 
 
 //routes declaration
@@ -24,6 +25,7 @@ app.use("/api/v1/events", eventRouter)
 app.use("/api/v1/blogs", blogsRouter)
 app.use("/api/v1/bookings", bookingRouter)
 app.use("/api/v1/favorites", favoritesRouter)
+app.use("/api/v1/c", contactUsRouter)
 // http://localhost:8000/api/v1/users/register
 
 export { app }

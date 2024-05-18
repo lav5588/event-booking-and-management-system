@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 
 const contactUsSchema = new mongoose.Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "users",
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
     required:true
   },
 
@@ -11,10 +14,6 @@ const contactUsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
-  attachments: [{
-    type: String,
-  }],
 
 }, {
   timestamps: true,

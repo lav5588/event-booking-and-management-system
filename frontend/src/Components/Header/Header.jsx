@@ -22,9 +22,12 @@ const Header = () => {
       </div>
       <div  className={`${humburger?styles.show:styles.hide} ${styles.links}`} >
         <Link to="" className={styles.link} >Events</Link>
-        <Link to="/" className={styles.link}>Stories</Link>
-        <Link to="/" className={styles.link}>Our Mission</Link>
-        <Link to="/" className={styles.link}>Contact Us</Link>
+        {
+          status &&
+        <Link to="/my-bookings" className={styles.link}>My Bookings</Link>
+        }
+        <Link to="/our-mission" className={styles.link}>Our Mission</Link>
+        <Link to="/contact-us" className={styles.link}>Contact Us</Link>
         {status &&
             <Link to="user-profile" className={styles.link}>My Profile</Link>
         }

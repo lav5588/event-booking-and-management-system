@@ -1,36 +1,26 @@
-import ContactUs from "../models/contactUs.model";
+import ContactUs from "../models/contactUs.model.js";
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
-import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 
 const registerRequest=asyncHandler(async(req,res)=>{
-    const user=req.user._id
-    if(!user){
-        throw new ApiError(404,"Unotherised request")
-    }
     
-    const {message}=req.body
+    const {name,email,message}=req.body
+    if(name.trim()===""){
+        throw new ApiError(400,"please provide your name")
+    }
     if(message.trim()===""){
         throw new ApiError(400,"please provide some message")
     }
-
-    const attachments=[];
-    
-    req.files?.attachments.foreach(async(ele)=>{
-        const localPath=ele.path
-        if(!localPath){
-            throw new ApiError(400,"localpath not found")
-        }
-        const resp=uploadOnCloudinary(localPath)
-        attachments.push(resp.url)
-    })
+    if(email.trim()===""){
+        throw new ApiError(400,"please provide Your email address");
+    }
         
     const registered=await ContactUs.create({
-        user,
+        name,
+        email,
         message,
-        attachments
     })
     if(!registered){
         throw new ApiError(402,"sopmething went wrong while registeration")

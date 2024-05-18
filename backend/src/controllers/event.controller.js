@@ -114,31 +114,35 @@ const registerEvent=asyncHandler(async(req,res)=>{
  
 
 
-const getEvent=asyncHandler(async(req,res)=>{
+const getEvent = asyncHandler(async(req, res) =>{
 
-  const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
-    if(token){
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
-    if(user){
-      const events=await Event.aggregate([
-        {
+  const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
+   if (token) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const user = await User.findById(decodedToken?._id).select("-password -refreshToken") || ""
+      if (user) {
+        const events = await Event.aggregate([{
           $lookup: {
             from: "favoriteevents",
-            let: { eventId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      { $eq: ["$event", "$$eventId"] },
-                      { $eq: ["$user", user._id] }
-                    ]
-                  }
+            let: {
+              eventId: "$_id"
+            },
+            pipeline: [{
+              $match: {
+                $expr: {
+                  $and: [{
+                    $eq: ["$event", "$$eventId"]
+                  },
+                  {
+                    $eq: ["$user", user._id]
+                  }]
                 }
-              },
-              { $count: "isLike" }
-            ],
+              }
+            },
+            {
+              $count: "isLike"
+            }],
             as: "favoriteEventDetails"
           }
         },
@@ -146,7 +150,12 @@ const getEvent=asyncHandler(async(req,res)=>{
           $addFields: {
             isLike: {
               $cond: {
-                if: { $gt: [{ $size: "$favoriteEventDetails" }, 0] },
+                if: {
+                  $gt: [{
+                    $size: "$favoriteEventDetails"
+                  },
+                  0]
+                },
                 then: true,
                 else: false
               }
@@ -157,53 +166,80 @@ const getEvent=asyncHandler(async(req,res)=>{
           $unset: "favoriteEventDetails"
         },
         {
-          $sort: { "createdAt": -1 }
+          $sort: {
+            "createdAt": -1
+          }
+        }]) 
+        return res.status(200).json(new ApiResponse(200, events, "Event fetched successfully"))
+      }
+
+    } catch(error) {
+      const events = await Event.aggregate([{
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "creatorDetails"
         }
-      ])
-      return res
-      .status(200)
-      .json(new ApiResponse(200,events,"Event fetched successfully"))
+      },
+      {
+        $addFields: {
+          creatorName: {
+            $first: "$creatorDetails.fullName"
+          },
+          creatorEmail: {
+            $first: "$creatorDetails.email"
+          }
+        }
+      },
+      {
+        $project: {
+          creatorDetails: 0,
+          invitees: 0,
+          isPublished: 0,
+          __v: 0,
+          createdBy: 0,
+          checklist: 0
+        }
+      }])
+
+      res.status(200).json(new ApiResponse(200, events, "Events fetched successfully"))
+
     }
-  }
-
-    const events=await Event.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "createdBy",
-            foreignField: "_id",
-            as: "creatorDetails"
-          }
+   }
+  const events = await Event.aggregate([{
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "creatorDetails"
+      }
+    },
+    {
+      $addFields: {
+        creatorName: {
+          $first: "$creatorDetails.fullName"
         },
-        {
-          $addFields: {
-            creatorName: {$first:"$creatorDetails.fullName"},
-            creatorEmail:{$first:"$creatorDetails.email"}
-          }
-        },
-        {
-          $project: {
-            creatorDetails:0,
-            invitees:0,
-            isPublished:0,
-            __v:0,
-            createdBy:0,
-            checklist:0
-          }
+        creatorEmail: {
+          $first: "$creatorDetails.email"
         }
-      ]
-      )
+      }
+    },
+    {
+      $project: {
+        creatorDetails: 0,
+        invitees: 0,
+        isPublished: 0,
+        __v: 0,
+        createdBy: 0,
+        checklist: 0
+      }
+    }])
 
+    res.status(200).json(new ApiResponse(200, events, "Events fetched successfully"))
 
-
-    
-    
-    res
-    .status(200)
-    .json( new ApiResponse(200,events,"Events fetched successfully"))
-
-})
-
+  }
+)
 
 
 const getEventById = asyncHandler(async(req,res)=>{
