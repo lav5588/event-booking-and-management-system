@@ -5,6 +5,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import  Jwt  from "jsonwebtoken"
 import nodemailer from "nodemailer"
 import mongoose from "mongoose"
+import chalk from "chalk"
 
 const generateAccessAndRefereshTokens = async(userId) =>{
     try {
@@ -314,10 +315,17 @@ const knowUserBetterSignUp=asyncHandler(async(req,res)=>{
 const verifyEmail =asyncHandler(async(req,res)=>{
         try {
             const{name, email} = req.body
+            const user=await User.findOneAndUpdate({email: email});
+            console.log(chalk.green("User: "),user)
+            if(user){
+                return res.status(200).json(
+                    new ApiResponse(400,"User with this email already exists.")
+                );
+            }
             let Otp=0;
             for(let i=0; i<6; i++){
                 Otp=Otp*10+Math.floor(Math.random()*10);
-                console.log("OTP:",Otp);
+                // console.log("OTP:",Otp);
             }
             const transporter = nodemailer.createTransport({
                 service: "gmail",
@@ -340,11 +348,11 @@ const verifyEmail =asyncHandler(async(req,res)=>{
             }
             await transporter.sendMail(messege);
             console.log("Otp sent to mail");
-            res.status(200).json(new ApiResponse(200,"OK",{Otp}));
+            return res.status(200).json(new ApiResponse(200,"OK",{Otp}));
     
         } catch (error) {
             console.log(error);
-            throw new ApiError("500","Something went wrong while trying to send otp message.")
+            return res.status(500).json(new  ApiResponse("500",{},"Something went wrong while trying to send otp message."));
         }
 });
 

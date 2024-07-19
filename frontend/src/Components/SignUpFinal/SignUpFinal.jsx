@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { setSignUpFinalData } from '../Store/Slices/SignUpDataStateSlice';
 import { redirect, useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SignUpFinal = () => {
   const [loading,setLoading] =useState(false);
@@ -177,10 +178,12 @@ const SignUpFinal = () => {
   },[]);
 
   const handleFinish=async()=>{
+    let tostId;
     try {
       const hob=[];
       selectedHobbiesIndex.forEach(i=>hob.push(indianHobbies[i]));
       dispatch(setSignUpFinalData({Location,hobbies:hob}));
+      tostId = toast.loading("Saving Your Details...");
       setLoading(true);
 
         const extraSave=await axios.post("http://localhost:8000/api/v1/users/know-user-better-signup",{
@@ -196,14 +199,17 @@ const SignUpFinal = () => {
           {
            withCredentials:true,
           });
-        console.log("extrasave",extraSave);
-        
+        // console.log("extrasave",extraSave);
+        toast.dismiss(tostId);
+        toast.success("Your details saved successfully!");
         setLoading(false);
         navigate("/signin");
       
     } catch (error) {
+      toast.dismiss(tostId);
+      toast.error("failed to saving your details")
       setLoading(false);
-      console.log("Error: ",error);
+      // console.log("Error: ",error);
     }
   }
 
@@ -258,6 +264,7 @@ const SignUpFinal = () => {
             </div>
            
           </div>
+          <Toaster/>
         </div>
       )
 }

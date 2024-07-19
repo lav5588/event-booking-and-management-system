@@ -1,6 +1,4 @@
 import { Schema,model } from "mongoose";
-
-
 const viewedProfileSchema=new Schema({
     profile:{
         type:Schema.Types.ObjectId,

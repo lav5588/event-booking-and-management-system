@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast'
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -14,17 +15,30 @@ function ContactUs() {
 
   const handleSend = async(e) => {
     e.preventDefault();
-    const resp=await axios.post(`${import.meta.env.VITE_BASE_URI}/c/contact-us`,formData);
-    // Add your logic to handle form submission here
-    console.log(formData); // For demonstration, log the form data to the console
-    console.log("resp: ",resp); // For demonstration, log the form data to the console
-    // You can perform further actions such as sending the form data to a server or displaying a confirmation message
-    // Reset form fields after submission
-    setFormData({
-      email: '',
-      name: '',
-      message: ''
-    });
+    let toastId;
+    try {
+      if([formData.name, formData.message, formData.email].some(field=>field.trim()=="")){
+        toast.error("Please fill all the fields")
+        return;
+      }
+      toastId = toast.loading("Submitting your request...");
+      const resp=await axios.post(`${import.meta.env.VITE_BASE_URI}/c/contact-us`,formData);
+      if(!resp){
+        toast.dismiss(toastId);
+        toast.error("!Something went wrong while sending the request");
+        return;
+      }
+      toast.dismiss(toastId);
+      toast.success("Your message has been sent successfully")
+      setFormData({
+        email: '',
+        name: '',
+        message: ''
+      });
+    } catch (error) {
+      toast.dismiss(toastId);
+      toast.error("Something went wrong while sending your request")
+    }
   };
 
   return (
@@ -83,6 +97,7 @@ function ContactUs() {
           </div>
         </form>
       </div>
+      <Toaster/>
     </div>
   );
 }

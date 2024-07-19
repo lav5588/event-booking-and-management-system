@@ -4,10 +4,9 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { logIn } from '../Store/Slices/AuthSlice';
 import { useDispatch } from 'react-redux';
-
+import toast, {Toaster } from 'react-hot-toast'
 const SignIn = () => {
-  const [error,setError] = useState("");
-  const [loading,setLoading] = useState("");
+  const [loading,setLoading] = useState(false);
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const dispatch=useDispatch();
@@ -18,38 +17,44 @@ const SignIn = () => {
   
   const handleSubmit=async(e)=>{
     e.preventDefault();
+    let toastId;
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       if(!emailRegex.test(email)){
-        setError("Not a valid email");
+        toast.error("Invalid email");
+        setEmail("");
         return;
       }
       if(!passwordRegex.test(password)){
-        setError("Not a valid password");
+        setPassword("");
+        toast.error("Invalid password");
         return;
       }
       const authData={
         email,
         password
       }
-      setLoading("Loading...");
+      setLoading(true);
+      toastId = toast.loading("Logging in...");
 
       const logInDetail=await axios.post("http://localhost:8000/api/v1/users/login",authData, {withCredentials: true, });
+      toast.dismiss(toastId);
       if(!logInDetail){
-        setError("Login failed");
+        toast.error("Wrong email or password");
         return;
       }
       dispatch(logIn(logInDetail.data.data.user));
       console.log("logInDetail:",logInDetail.data.data.user);
-      
-
-      setLoading("");
+      setLoading(false);
       navigate("/");
       location.reload();
     } catch (error) {
-        setLoading("");
-        setError("Error: "+error);
+      toast.dismiss(toastId);
+        setLoading(false);
+        toast.error("wrong email or password");
+        setEmail("");
+        setPassword("");
         console.log("Error: ",error);
     }
   }
@@ -67,7 +72,8 @@ const SignIn = () => {
                 <input 
                   type="email"
                   placeholder='Email Address'
-                  name='email' 
+                  name='email'
+                  value={email}
                   id='email' 
                   style={{paddingLeft:"10px"}} 
                   className={styles.inpt} 
@@ -78,6 +84,7 @@ const SignIn = () => {
                   placeholder='Password' 
                   name='password' 
                   id='password'
+                  value={password}
                   style={{paddingLeft:"10px"}} 
                   className={styles.inpt} 
                   onChange={(e)=>setPassword(e.target.value)}
@@ -88,14 +95,13 @@ const SignIn = () => {
                     <span className='font-light text-[0.7rem] ml-auto text-blue-800'><a href="#">Forgotten Password</a></span>
 
                </div>
-               {loading &&  <p className='text-red-500'>{loading}</p>}
-                {error && <p className='text-red-500'>{error}</p>}
-                <button type="submit" className='bg-[#B1761F] rounded-md h-12 text-white' onClick={handleSubmit}>SignIn</button>
+                <button type="submit" className={`${loading ? "cursor-wait": ""}bg-[#B1761F] rounded-md h-12 text-white`} onClick={handleSubmit}>SignIn</button>
                 <p>Don't have an account?<Link to="/signup" className='text-blue-800'>Click Here</Link></p>
             </form>
         </div>
       </div>
       <div className={`max-w-[50vw] ${styles.img}`}><img src="./SignUpPageImage.png" alt=""  className='h-[100vh] w-[50vw]'/></div>
+      <Toaster />
     </div>
   )
 }

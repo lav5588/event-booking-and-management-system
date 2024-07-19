@@ -4,7 +4,7 @@ import App from './App.jsx'
 import {SignIn,  SignUpNext,CreateEvent,UserProfile, Events, Event} from './Components'
 import './index.css'
 import { store } from './Components/Store/Store.js'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 import {
    Route,
    RouterProvider,
@@ -12,14 +12,16 @@ import {
    createRoutesFromElements
    } 
 from 'react-router-dom'
-
-
 import { ThemeProvider } from '@material-tailwind/react'
 import Mybookings from './Components/Mybokings/Mybookings.jsx'
 import OurMission from './Components/Our Mission/OurMission.jsx'
 import ContactUs from './Components/ContactUs/ContactUs.jsx'
+import Skeleton from './Components/material-ui-services/EventSkeleton.jsx'
+
 
 const router=createBrowserRouter(
+
+
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<App/>}>
