@@ -13,9 +13,9 @@ import {
    } 
 from 'react-router-dom'
 import { ThemeProvider } from '@material-tailwind/react'
-import Mybookings from './Components/Mybokings/Mybookings.jsx'
-import OurMission from './Components/Our Mission/OurMission.jsx'
-import ContactUs from './Components/ContactUs/ContactUs.jsx'
+import Mybookings from './Components/MyBookings/Mybookings'
+import OurMission from './Components/Our Mission/OurMission'
+import ContactUs from './Components/ContactUs/ContactUs'
 
 
 const router=createBrowserRouter(
