@@ -12,7 +12,7 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import { ThemeProvider } from '@material-tailwind/react';
-import OurMission from './Components/OurMission/OurMission.jsx';
+import OurMission from './Components/Our Mission/OurMission.jsx';
 import ContactUs from './Components/ContactUs/ContactUs.jsx';
 import Mybookings from './Components/MyBookings/Mybookings.jsx'; // Corrected import path
 
