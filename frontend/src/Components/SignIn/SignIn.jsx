@@ -38,7 +38,7 @@ const SignIn = () => {
       setLoading(true);
       toastId = toast.loading("Logging in...");
 
-      const logInDetail=await axios.post("http://localhost:8000/api/v1/users/login",authData, {withCredentials: true, });
+      const logInDetail=await axios.post(`${import.meta.env.VITE_BASE_URI}/users/login`,authData, {withCredentials: true, });
       toast.dismiss(toastId);
       if(!logInDetail){
         toast.error("Wrong email or password");
