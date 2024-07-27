@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-const Mybookings = () => {
+const MyBookings = () => {
     const [mybookings, setMybookings] = useState([]);
     const { fullName } = useSelector(state => state.authReducer.userData || "");
 
@@ -102,4 +102,4 @@ const Mybookings = () => {
     )
 }
 
-export default Mybookings;
+export default MyBookings;
