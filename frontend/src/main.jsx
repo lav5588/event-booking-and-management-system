@@ -14,7 +14,7 @@ import {
 import { ThemeProvider } from '@material-tailwind/react';
 import OurMission from './Components/Our Mission/OurMission.jsx';
 import ContactUs from './Components/ContactUs/ContactUs.jsx';
-import Mybookings from './Components/MyBookings/Mybookings.jsx'; // Corrected import path
+// import Mybookings from './Components/MyBookings/Mybookings.jsx'; // Corrected import path
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +24,7 @@ const router = createBrowserRouter(
         <Route path="event/:eventid" element={<Event />} />
         <Route path="create-event" element={<CreateEvent />} />
         <Route path="user-profile" element={<UserProfile />} />
-        <Route path="my-bookings" element={<Mybookings />} />
+        {/* <Route path="my-bookings" element={<Mybookings />} /> */}
         <Route path="our-mission" element={<OurMission />} />
         <Route path="contact-us" element={<ContactUs />} />
       </Route>
