@@ -186,7 +186,7 @@ const SignUpFinal = () => {
       tostId = toast.loading("Saving Your Details...");
       setLoading(true);
 
-        const extraSave=await axios.post("http://localhost:8000/api/v1/users/know-user-better-signup",{
+        const extraSave=await axios.post(`${import.meta.env.VITE_BASE_URI}/users/know-user-better-signup`,{
           dob,
           gender:gendre,
           relationshipStatus,

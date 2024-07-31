@@ -25,7 +25,7 @@ const SignUpExtra = () => {
   const handleNext = async() => {
     dispatch(setSignUpExtraData({dob,gendre,relationshipStatus,haveAnyKids}))
     
-     const loginDet=await axios.post("http://localhost:8000/api/v1/users/login", {
+     const loginDet=await axios.post(`${import.meta.env.VITE_BASE_URI}/users/login`, {
       email,
       password,
     },{withCredentials: true });   
@@ -33,7 +33,7 @@ const SignUpExtra = () => {
     dispatch(setSignUpNextExtra(true));
   }
   const handleSkip=async() => {
-    await axios.post("http://localhost:8000/api/v1/users/login", {
+    await axios.post(`${import.meta.env.VITE_BASE_URI}/users/login`, {
       email,
       password,
     },{withCredentials: true});    
