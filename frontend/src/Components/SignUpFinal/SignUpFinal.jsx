@@ -203,7 +203,7 @@ const SignUpFinal = () => {
         toast.dismiss(tostId);
         toast.success("Your details saved successfully!");
         setLoading(false);
-        navigate("/signin");
+        navigate("/");
       
     } catch (error) {
       toast.dismiss(tostId);

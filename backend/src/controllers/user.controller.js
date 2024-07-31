@@ -320,7 +320,7 @@ const verifyEmail =asyncHandler(async(req,res)=>{
             const user=await User.findOneAndUpdate({email: email});
             console.log(chalk.green("User: "),user)
             if(user){
-                return res.status(200).json(
+                return res.status(400).json(
                     new ApiResponse(400,"User with this email already exists.")
                 );
             }
