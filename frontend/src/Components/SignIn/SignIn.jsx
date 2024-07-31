@@ -38,7 +38,7 @@ const SignIn = () => {
       setLoading(true);
       toastId = toast.loading("Logging in...");
 
-      const logInDetail=await axios.post(`${import.meta.env.VITE_BASE_URI}/users/login`,authData, {withCredentials: true, });
+      const logInDetail=await axios.post(`${import.meta.env.VITE_BASE_URI}/users/login`,authData, {withCredentials: true});
       toast.dismiss(toastId);
       if(!logInDetail){
         toast.error("Wrong email or password");
@@ -48,7 +48,6 @@ const SignIn = () => {
       console.log("logInDetail:",logInDetail.data.data.user);
       setLoading(false);
       navigate("/");
-      location.reload();
     } catch (error) {
       toast.dismiss(toastId);
         setLoading(false);
