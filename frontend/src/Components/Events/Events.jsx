@@ -82,6 +82,7 @@ const Events = () => {
     <>
       <h1 className='text-center text-3xl font-semibold'>EVENTS</h1>
       <div className='flex flex-wrap sm:mx-14 rounded-lg bg-[#21787333] gap-3 my-5 justify-center'>
+        {eventData.length == 0 && <h1>No event data found</h1>}
         {
           eventData?.map((data,index) => {
             return (
