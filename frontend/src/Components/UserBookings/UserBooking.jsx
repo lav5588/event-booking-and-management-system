@@ -68,7 +68,7 @@ const Booking = () => {
 
     return (
         <div className='flex gap-x-20 justify-center flex-wrap'>
-            {mybookings && <h1>You have not booked any event</h1>}
+            {mybookings.length==0 && <h1>You have not booked any event</h1>}
             {mybookings.map((booking, index) => (
                 <div key={booking._id} id={booking._id} className='my-5 border border-black rounded-lg bg-[#21787333] p-5 w-[25rem]'>
                     <h1 className='text-center text-[#217873] text-2xl font-semibold'>Event crafter</h1>
